@@ -18,22 +18,13 @@ jobs:
         with:
           github-token: ${{ secrets.MY_PAT }}
           script: |
-            const query = `query($orgName:String!, $repo:String!) { 
-              repository(owner:$orgName, name:$repo) { 
-                deployments( environments:["cd"], first:1, orderBy:{field:CREATED_AT, direction:DESC}) {
-                  nodes {
-                    payload
-                  }
-                }
-              }
-            }`;
-            const variables = {'orgName': 'octodemo', 'repo': 'cd-poc-front'}
-            const result = await github.graphql(query, variables)
-            const jsonPayload = JSON.parse(result.repository.deployments.nodes[0].payload)
-            console.log("Result", result)
-            console.log("PAYLOAD", jsonPayload)
-            console.log("RUN", JSON.parse(jsonPayload).run)
-            return jsonPayload
+            await result  = github.rest.repos.listDeployments({
+              owner: 'octodemo', 
+              repo: 'cd-poc-front', 
+              environment: 'cd'
+            })
+            console.log(JSON.stringify(result.data[0]));    
+            return result.data[0].payload
       - name: Show deployment id
         run: |
           echo "Result = ${{ steps.set-result.outputs.result }}"
