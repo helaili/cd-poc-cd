@@ -23,14 +23,21 @@ jobs:
               repository(owner:$orgName, name:$repo) { 
                 deployments( environments:["qa"], first:1, orderBy:{field:CREATED_AT, direction:DESC}) {
                   nodes {
-                    id
+                    databaseId
                   }
                 }
               }
             }`;
             const variables = {'orgName': 'octodemo', 'repo': 'cd-poc-front'}
             const result = await github.graphql(query, variables)
-            console.log(result.repository.deployments.nodes[0])
-            return result.repository.deployments.nodes[0]
+            console.log(result.repository.deployments.nodes[0].databaseId)
+            return result.repository.deployments.nodes[0].databaseId
       - name: Show deployment id
         run: echo "${{ steps.set-result.outputs.result }}"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.MY_PAT }}
+          repository: 'octodemo/cd-poc-front'
+          run-id: ${{ steps.set-result.outputs.result }}
+      - name: Display structure of downloaded files
+        run: ls -R
