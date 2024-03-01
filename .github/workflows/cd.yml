@@ -24,7 +24,7 @@ jobs:
               environment: 'cd'
             })
             console.log(JSON.stringify(result.data[0]));    
-            return result.data[0].payload
+            return JSON.parse(result.data[0].payload)
       - name: Show deployment id
         run: |
           echo "Result = ${{ steps.set-result.outputs.result }}"
