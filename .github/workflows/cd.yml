@@ -30,6 +30,7 @@ jobs:
             }`;
             const variables = {'orgName': 'octodemo', 'repo': 'cd-poc-front'}
             const result = await github.graphql(query, variables)
+            console.log(result.repository.deployments.nodes[0])
             return result.repository.deployments.nodes[0]
       - name: Show deployment id
         run: echo "${{ steps.set-result.outputs.result }}"
