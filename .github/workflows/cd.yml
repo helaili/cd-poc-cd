@@ -15,9 +15,9 @@ jobs:
       - name: Get the deployments
         uses: actions/github-script@v7
         id: set-result
-        result-encoding: string
         with:
           github-token: ${{ secrets.MY_PAT }}
+          result-encoding: string
           script: |
             const query = `query($orgName:String!, $repo:String!) { 
               repository(owner:$orgName, name:$repo) { 
