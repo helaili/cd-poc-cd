@@ -33,6 +33,6 @@ jobs:
         with:
           github-token: ${{ secrets.MY_PAT }}
           repository: 'octodemo/cd-poc-front'
-          run-id: ${{ steps.set-result.outputs.result.run }}
+          run-id: ${{ fromJSON(steps.set-result.outputs.result).run }}
       - name: Display structure of downloaded files
         run: ls -R
