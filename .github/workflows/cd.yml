@@ -28,6 +28,6 @@ jobs:
               owner: 'octodemo', 
               repo: 'cd-poc-front', 
               environment: 'qa'
-            }).then((response) => {
-              console.log(JSON.stringify(response));    
+            }).then(({data}) => {
+              console.log(JSON.stringify(data));    
             });
