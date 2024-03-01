@@ -24,11 +24,11 @@ jobs:
               environment: 'cd'
             })
             console.log(JSON.stringify(result.data[0]));    
-            return JSON.parse(result.data[0].payload)
+            return result.data[0].payload
       - name: Show deployment id
         run: |
           echo "Result = ${{ steps.set-result.outputs.result }}"
-          echo "Run = ${{ steps.set-result.outputs.result.run }}"
+          echo "Run = ${{ fromJSON(steps.set-result.outputs.result).run }}"
       - uses: actions/download-artifact@v4
         with:
           github-token: ${{ secrets.MY_PAT }}
