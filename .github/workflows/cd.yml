@@ -24,10 +24,18 @@ jobs:
         with:
           github-token: ${{ secrets.MY_PAT }}
           script: |
-            github.rest.repos.listDeployments({
-              owner: 'octodemo', 
-              repo: 'cd-poc-front', 
-              environment: 'qa'
-            }).then(({data}) => {
-              console.log(JSON.stringify(data));    
-            });
+            const query = `query getLastDeployment($orgName:String!, $repo:String!) {
+	            repository(owner:$orgName, name:$repo) {
+               deployments(environments: ["qa"], first: 1, orderBy: {field: CREATED_AT, direction: DESC}) {
+                 nodes {
+				            id
+			            }
+		            }
+              }
+            }`;
+            const variables = {
+              orgName: 'octodemo',
+              repo: 'cd-poc-front'
+            }
+            const result = await github.graphql(query, variables)
+            console.log(result)
