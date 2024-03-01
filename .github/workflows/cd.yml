@@ -17,27 +17,26 @@ jobs:
         id: set-result
         with:
           github-token: ${{ secrets.MY_PAT }}
-          result-encoding: string
           script: |
             const query = `query($orgName:String!, $repo:String!) { 
               repository(owner:$orgName, name:$repo) { 
-                deployments( environments:["qa"], first:1, orderBy:{field:CREATED_AT, direction:DESC}) {
+                deployments( environments:["cd"], first:1, orderBy:{field:CREATED_AT, direction:DESC}) {
                   nodes {
-                    databaseId
+                    payload
                   }
                 }
               }
             }`;
             const variables = {'orgName': 'octodemo', 'repo': 'cd-poc-front'}
             const result = await github.graphql(query, variables)
-            console.log(result.repository.deployments.nodes[0].databaseId)
-            return result.repository.deployments.nodes[0].databaseId
+            console.log(JSON.stringify(result.repository.deployments.nodes[0].payload))
+            return result.repository.deployments.nodes[0].payload
       - name: Show deployment id
         run: echo "${{ steps.set-result.outputs.result }}"
       - uses: actions/download-artifact@v4
         with:
           github-token: ${{ secrets.MY_PAT }}
           repository: 'octodemo/cd-poc-front'
-          run-id: ${{ steps.set-result.outputs.result }}
+          run-id: ${{ steps.set-result.outputs.result.run }}
       - name: Display structure of downloaded files
         run: ls -R
