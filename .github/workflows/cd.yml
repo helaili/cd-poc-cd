@@ -1,0 +1,32 @@
+name: CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      # Runs a set of commands using the runners shell
+      - name: Get the deployments
+        uses: actions/github-script@v7
+        id: set-result
+        with:
+          script: |
+            github.rest.repos.listDeployments({
+              owner: 'octodemo', 
+              repo: 'cd-poc-front', 
+              environment: 'qa'
+            }).then((response) => {
+              console.log(JSON.stringify(response));    
+            });
