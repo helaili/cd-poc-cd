@@ -19,7 +19,7 @@ jobs:
           github-token: ${{ secrets.MY_PAT }}
           script: |
             result = await github.rest.repos.listDeployments({
-              owner: 'octodemo', 
+              owner: 'helaili', 
               repo: 'cd-poc-front', 
               environment: 'cd'
             })
@@ -32,7 +32,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           github-token: ${{ secrets.MY_PAT }}
-          repository: 'octodemo/cd-poc-front'
+          repository: 'helaili/cd-poc-front'
           run-id: ${{ fromJSON(steps.set-result.outputs.result).run }}
       - name: Display structure of downloaded files
         run: ls -R
